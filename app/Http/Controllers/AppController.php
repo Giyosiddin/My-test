@@ -80,6 +80,7 @@ class AppController extends Controller
 
     public function search(Request $request)
     {   
+      
         $products = [ 
                 ['product' => 'Desk', 'price' => 200],
                 ['product' => 'Chair', 'price' => 100],
@@ -88,14 +89,17 @@ class AppController extends Controller
            ];
         $productName = $request->q;
        $collection = collect($products)->filter(function ($item) use ($productName) { 
-
-        // dd($item);
-        return false !== stristr($item['product'], $productName); 
+            
+            if(!empty($productName)){
+                return false !== stristr($item['product'], $productName); 
+            }
         });
 
-        
+       // dd($collection);
 
-       return $collection->toJson();
+       return response()->json([
+        'data' => array_values($collection->toArray())
+       ]);
     }
 
 }
